@@ -14,14 +14,12 @@ Vue.use(VueRouter);
 const routes = [{
   path: '/edit',
   components: {
-    fogOver:  App.components.FogOver,
-    editCard: App.components.EditCard
+	fogOver:  App.components.FogOver,
+	editCard: App.components.EditCard
   }
 }];
 
-const router = new VueRouter({
-  routes
-});
+const router = new VueRouter({ routes });
 
 new Vue({
   render: h => h(App),

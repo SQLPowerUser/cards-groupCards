@@ -1,99 +1,90 @@
 <template>
-  <div class="card">
-    <p class="card-caption">&#9660; {{ caption }}</p>
+	<div class="card">
+		<div class="card-caption">
+			<p
+				v-html="expandSymbol"
+				class="card-caption__btn-expand"
+				@click="isExpand = !isExpand"
+			></p>
+			<p> {{ groupInfo[1] }} </p>
 
-    <ul>
-      <li class="card-item img-edit" v-for="(note, idx) in notes">
-        {{ note.text }}
+			<div class="card-caption-menu" tabindex="-1">
+				&#9776;
+				<div class="card-caption-menu-items">
+					<p class="card-caption-menu-item" @click="showEditTask(groupInfo[0])">
+						<svg viewBox="0 0 16 16" width="16" height="16">
+							<path d="M14 8H8V14H6V8H0V6H6V0H8V6H14V8Z" fill="#007200" />
+						</svg>
+						&#160;Добавить задание
+					</p>
+					<p class="card-caption-menu-item">
+						<svg viewBox="1 -1 16 16" width="16" height="16">
+							<path fill="#999" d="M14 1H2c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h2v3.5L7.5 11H14c.55 0 1-.45 1-1V2c0-.55-.45-1-1-1zm0 9H7l-2 2v-2H2V2h12v8z"></path>
+						</svg>
+						&#160;Переименовать группу
+					</p>
+					<p class="card-caption-menu-item">
+						<svg viewBox="2 0 12 16" width="16" height="16">
+							<path fill="#ec5252" d="M7.48 8l3.75 3.75-1.48 1.48L6 9.48l-3.75 3.75-1.48-1.48L4.52 8 .77 4.25l1.48-1.48L6 6.52l3.75-3.75 1.48 1.48L7.48 8z"></path>
+						</svg>
+						Удалить всю группу
+					</p>
+				</div>
+			</div>
+		</div>
 
-        <p
-          class="card-item__btn-edit img-edit"
-          @click="showEditCard(caption, idx)"
-        ></p>
-      </li>
-    </ul>
-
-    <p
-      class="card__btn-add"
-      @click="showBlockAdd = true"
-      v-show="!showBlockAdd"
-    >
-      <svg width="27" height="14">
-        <path d="M14 8H8V14H6V8H0V6H6V0H8V6H14V8Z" fill="#626262" />
-      </svg>
-      Добавить ещё одну карточку
-    </p>
-
-    <div class="card-add-block" v-show="showBlockAdd">
-      <textarea
-        class="card-add-block__textarea"
-        placeholder="Введите текст карточки"
-        v-model="newText"
-        @keyup.enter="addNote(caption)"
-      ></textarea>
-
-      <div class="card-add-block__btns">
-        <p class="card-add-block__btn-save" @click="addNote(caption)">
-          Добавить карточку
-        </p>
-
-        <p class="card-add-block__btn-cancel" @click="showBlockAdd = false">
-          <svg width="27" height="14">
-            <path
-              d="M14 1.41L12.59 0L7 5.59L1.41 0L0 1.41L5.59 7L0 12.59L1.41 14L7 8.41L12.59 14L14 12.59L8.41 7L14 1.41Z"
-              fill="#626262"
-            />
-          </svg>
-          Отмена
-        </p>
-      </div>
-      <!-- class="card-add-block__btns" -->
-    </div>
-    <!-- class="card-add-block" -->
-  </div>
-  <!-- class="card" -->
+		<ul v-show="isExpand" class="card-items-block">
+			<li
+				class="card-item"
+				v-for="task in tasks"
+				@click="showEditTask(task)"
+			>
+				<span v-html="showCompleteIcon(task.isComplete)" class="card-isCompleteIcon"></span>
+				{{ task.name }}
+			</li>
+		</ul>
+	</div> <!-- class="card" -->
 </template>
 
 <script>
 export default {
-  data() {
-    return {
-      newText: "",
-      showBlockAdd: false,
-    };
-  }, // data
+	name: "Card",
+	props: {
+		groupInfo: Array,
+		tasks: Array,
+	},
+	data() {
+		return {
+			newText: "",
+			showBlockAdd: false,
+			isExpand: true
+		};
+	}, // data
 
-  methods: {
-    addNote(caption) {
-      let txt = this.newText.trim();
-      this.newText = "";
-      if (!txt) {
-        return;
-      }
-
-      this.$store.commit({
-        type: "addNote",
-        category: caption,
-        text: txt,
-      });
-    }, // addNote
-
-    showEditCard(caption, idx) {
-      this.$store.commit({
-        type: "setCurrentRecord",
-        category: caption,
-        currentId: idx,
-      });
-
-      this.$router.push("edit");
-    }, // showEditCard
-  }, // methods
-
-  name: "Card",
-  props: {
-    caption: String,
-    notes: Array,
-  },
+	computed: {
+		expandSymbol() {
+			return this.isExpand ? '▼' : '►';
+		}
+	},
+	methods: {
+		showCompleteIcon(isComplete) {
+			return isComplete ? `<svg width="16" height="16" viewBox="0 0 48 48"> <circle fill="#4CAF50" cx="24" cy="24" r="21" />
+				<polygon fill="#CCFF90" points="34.6,14.6 21,28.2 15.4,22.6 12.6,25.4 21,33.8 37.4,17.4" /> </svg>`
+				: `<svg width="16" height="16" viewBox="0 0 16 16"> <path fill="red" d="M7 2.3c3.14 0 5.7 2.56 5.7 5.7s-2.56 5.7-5.7 5.7A5.71 5.71 0 0 1 1.3 8c0-3.14 2.56-5.7 5.7-5.7zM7 1C3.14 1 0 4.14 0 8s3.14 7 7 7 7-3.14 7-7-3.14-7-7-7zm1 3H6v5h2V4zm0 6H6v2h2v-2z"></path>
+				</svg>`;
+		},
+		showEditTask(passData) {
+			const currentMode = (typeof(passData) === 'string') ? 'addTask' : 'editTask';
+			const currentTaskID = (currentMode === 'add') ? null : passData.id;
+			this.$store.commit({
+				type: "setCurrentRecord",
+				currentMode: currentMode,
+				currentGroupID: this.groupInfo[0],
+				currentTaskID:  currentTaskID
+			});
+			this.$router.push("edit");
+		}
+	}
 };
 </script>
 
@@ -101,68 +92,72 @@ export default {
 @import "../styles/_vars.scss";
 
 .card {
-  margin-top: 10px;
-  padding: 12px 12px 8px 12px;
-  background: $background-card;
-  border-radius: 5px;
-  color: $color-field-text;
-  align-self: flex-start;
+	margin-top: 15px;
+	background: $background-card;
+	border-radius: 5px;
+	align-self: flex-start;
+	border: 1px solid;
+	border-color: #e1e1e1 #ddd #cdcdcd #ddd;
 }
 
 .card-caption {
-  color: $color-caption;
+	display: flex;
+	margin-bottom: 6px;
+	padding: 8px 10px 6px 6px;
+}
+
+.card-caption__btn-expand {
+	@include fac;
+	@include card-btn;
+	margin-right: 5px;
+	flex: 0 0 20px;
+}
+
+.card-caption-menu {
+	@include card-btn;
+	margin-left: auto;
+	padding: 0 4px;
+}
+
+.card-caption-menu-items {
+	position: absolute;
+	left: -170px;
+	padding: 2px 5px;
+	background: #fff;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	display: block;
+}
+
+.card-caption-menu:focus .card-caption-menu-items {
+	display: block;
+}
+
+.card-caption-menu-item {
+	display: flex;
+	align-items: center;
+	height: 22px;
+}
+
+.card-items-block {
+	padding: 0 10px 1px 0;
+}
+
+.card-item:first-child {
+	margin-top: 0;
 }
 
 .card-item {
-  position: relative;
-  @include card-item;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
+	@include card-item;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	cursor: pointer;
 }
 
-.card-item__btn-edit {
-  position: absolute;
-  margin: auto 0 auto auto;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  width: 16px;
-  height: 16px;
-  cursor: pointer;
-  display: none;
+.card-isCompleteIcon {
+	position: relative;
+	top: 2px;
+	left: -4px;
 }
 
-.card-item:hover .card-item__btn-edit {
-  display: block;
-}
-
-.card__btn-add {
-  @include btn(256px, 32px, $color-btn-default, transparent, #c4c4c4);
-}
-
-.card-add-block__textarea {
-  margin-top: 0;
-  max-height: 52px;
-}
-
-.card-add-block__btns {
-  display: flex;
-  justify-content: space-between;
-}
-
-.card-add-block__btn-save {
-  @include btn(
-    160px,
-    32px,
-    $color-btn-save,
-    $background-btn-save,
-    $background-btn-save
-  );
-}
-
-.card-add-block__btn-cancel {
-  @include btn(108px, 32px, $color-btn-default, transparent, #c4c4c4);
-}
 </style>
