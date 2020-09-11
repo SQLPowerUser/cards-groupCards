@@ -3,10 +3,9 @@
 		<div class="container-toolbar">
 			<p class="container-toolbar-legend">Фильтры</p>
 			<div class="container-toolbar-card-search">
-				Название карточки:&#160;
+				Название&#160;карточки:&#160;
 				<input
 					type="text"
-					class="container-toolbar-search-text"
 					v-model="searchText"
 				>
 			</div>
@@ -35,7 +34,10 @@
 		</div>
 
 		<div class="group-operations">
-			<p class="group-operations__btn-create-new">
+			<p
+				class="group-operations__btn-create-new"
+				@click="createNewGroup"
+			>
 				Создать новую группу
 			</p>
 			<p
@@ -55,14 +57,16 @@
 		></Card>
 
 		<router-view name="fogOver"></router-view>
-		<router-view name="editCard"></router-view>
+		<router-view name="addEditTask"></router-view>
+		<router-view name="addEditGroup"></router-view>
 	</div> <!-- class="container" -->
 </template>
 
 <script>
-import Card from "./components/card.vue";
-import EditCard from "./components/editCard.vue";
-import FogOver from "./components/fogOver.vue";
+import Card from './components/card.vue';
+import AddEditTask from './components/addEditTask.vue';
+import AddEditGroup from './components/addEditGroup.vue';
+import FogOver from './components/fogOver.vue';
 
 export default {
 	data() {
@@ -82,6 +86,9 @@ export default {
 			this.searchText = '';
 			this.isComplete = 'any';
 		},
+		createNewGroup() {
+			this.$router.push('addEditGroup');
+		},
 		groupsExpandCollapse() {
 			this.allExpand = !this.allExpand;
 			[...document.querySelectorAll('.card-caption__btn-expand')].forEach(el => {
@@ -91,13 +98,14 @@ export default {
 	},
 	components: {
 		Card,
-		EditCard,
+		AddEditTask,
+		AddEditGroup,
 		FogOver,
-	},
+	}
 };
-setTimeout(() => {
-	//console.log('card-caption-menu-item :>> ', document.querySelectorAll('.card-caption-menu-item')[0].click());
-}, 500);
+/*setTimeout(() => {
+	document.querySelectorAll('.card-caption-menu-item')[0].click();
+}, 500);/**/
 </script>
 
 
@@ -145,12 +153,15 @@ setTimeout(() => {
 	background: linear-gradient(#3fb3f0, #0272a0);
 }
 
-.container-toolbar-search-text {
-	width: 280px;
+.container-toolbar-card-search {
+	display: flex;
+	align-items: center;
+	flex: 1 1 50%;
+	margin: 14px 20px 0 0;
+	white-space: nowrap;
 }
 
-.container-toolbar-card-search,
-.container-toolbar-card-state, {
+.container-toolbar-card-state {
 	@include fwr;
 	margin-top: 14px;
 }

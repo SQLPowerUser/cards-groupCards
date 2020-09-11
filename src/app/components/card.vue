@@ -33,13 +33,14 @@
 			</div>
 		</div>
 
-		<ul v-show="isExpand" class="card-items-block">
+		<ul v-show="isExpand" class="row-items-block">
 			<li
-				class="card-item"
+				class="row-item"
 				v-for="task in tasks"
+				:key="task.id"
 				@click="showEditTask(task)"
 			>
-				<span v-html="showCompleteIcon(task.isComplete)" class="card-isCompleteIcon"></span>
+				<span v-html="showCompleteIcon(task.isComplete)" class="row-item-complete-icon"></span>
 				{{ task.name }}
 			</li>
 		</ul>
@@ -74,15 +75,15 @@ export default {
 				</svg>`;
 		},
 		showEditTask(passData) {
-			const currentMode = (typeof(passData) === 'string') ? 'addTask' : 'editTask';
-			const currentTaskID = (currentMode === 'add') ? null : passData.id;
+			const currentMode = (typeof(passData) === 'string') ? 'Добавить задание' : 'Редактировать задание';
+			const currentTaskID = passData.id ? passData.id : '';
 			this.$store.commit({
-				type: "setCurrentRecord",
-				currentMode: currentMode,
-				currentGroupID: this.groupInfo[0],
-				currentTaskID:  currentTaskID
+				type: "setCurrentInfo",
+				mode: currentMode,
+				groupID: this.groupInfo[0],
+				taskID:  currentTaskID
 			});
-			this.$router.push("edit");
+			this.$router.push('addEditTask');
 		}
 	}
 };
@@ -126,7 +127,8 @@ export default {
 	background: #fff;
 	border: 1px solid #ccc;
 	border-radius: 3px;
-	display: block;
+	display: none1;
+	z-index: 1;
 }
 
 .card-caption-menu:focus .card-caption-menu-items {
@@ -139,25 +141,23 @@ export default {
 	height: 22px;
 }
 
-.card-items-block {
+.row-items-block {
 	padding: 0 10px 1px 0;
 }
 
-.card-item:first-child {
+.row-item {
+	@include row-item;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	cursor: zoom-in;
+}
+
+.row-item:first-child {
 	margin-top: 0;
 }
 
-.card-item {
-	@include card-item;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	cursor: pointer;
-}
-
-.card-isCompleteIcon {
+.row-item-complete-icon {
 	position: relative;
 	top: 2px;
-	left: -4px;
 }
-
 </style>

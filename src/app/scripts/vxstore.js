@@ -1,32 +1,33 @@
 export default {
 	state: {
 		group: {
-			0: { name: "Изучить языки программирования" },
-			1: { name: "Длинное название группы, не помещается на экран 320px" },
-			2: { name: "abc" },
-			3: { name: "тест" },
-			4: { name: "Empty Group" },
+			1: { name: "В любой группе нет дубликатов" },
+			2: { name: "Длинное название группы, не помещается на экран 320px" },
+			3: { name: "Изучить языки программирования" },
+			4: { name: "тест" },
+			5: { name: "Empty Group" },
 		},
 		task: {
-			0: { groupID: 1, name: "Защитить исследовательский Центр Парения", isComplete: false },
-			1: { groupID: 1, name: "Освободить комплекс по добыче воды", isComplete: false },
-			2: { groupID: 3, name: "t1", isComplete: false },
-			3: { groupID: 3, name: "t2", isComplete: true },
-			4: { groupID: 3, name: "t3", isComplete: false },
-			5: { groupID: 3, name: "t4", isComplete: false },
-			6: { groupID: 0, name: "Javascript", isComplete: true },
-			7: { groupID: 0, name: "SQL", isComplete: true },
-			8: { groupID: 0, name: "C", isComplete: false },
-			9: { groupID: 0, name: "Assembler", isComplete: false },
-			10: { groupID: 2, name: "11111", isComplete: false },
-			11: { groupID: 2, name: "zzzzz", isComplete: true },
+			1: { groupID: 2, name: "Защитить исследовательский Центр Парения", isComplete: false },
+			2: { groupID: 2, name: "Освободить комплекс по добыче воды", isComplete: false },
+			3: { groupID: 4, name: "t1", isComplete: false },
+			4: { groupID: 4, name: "t2", isComplete: true },
+			5: { groupID: 4, name: "t3", isComplete: false },
+			6: { groupID: 4, name: "t4", isComplete: false },
+			7: { groupID: 3, name: "Javascript", isComplete: true },
+			8: { groupID: 3, name: "SQL", isComplete: true },
+			9: { groupID: 3, name: "C", isComplete: false },
+			10: { groupID: 3, name: "Assembler", isComplete: false },
+			11: { groupID: 1, name: "1", isComplete: false },
+			12: { groupID: 1, name: "z", isComplete: true },
 		},
-		maxGroupID: 4,
-		maxTaskID: 11,
-		currentMode:	null,
-		currentGroupID: null,
-		currentTaskID: null,
-		expandAll: true
+		currentInfo: {
+			mode: '',
+			groupID: '',
+			taskID: ''
+		},
+		maxGroupID: 5,
+		maxTaskID: 12
 	},
 
 	getters: {
@@ -58,18 +59,20 @@ export default {
 		setExpandAll(state, data) {
 			state.expandAll = data.expand;
 		},
-		setCurrentRecord(state, data) {
-			state.currentMode	= data.currentMode;
-			state.currentGroupID = data.currentGroupID;
-			state.currentTaskID  = data.currentTaskID;
+		setCurrentInfo(state, data) {
+			delete data.type;
+			state.currentInfo = data;
+		},
+		saveTask(state, data) {
+			let taskID = state.currentInfo.taskID || ++state.maxTaskID;
+			delete data.type;
+			state.task = {...state.task, ...{[taskID]: data}};
 		},
 		addNewGroup(state, data) {
 			//state.group.push(++state.maxID, name: data.name });
 		},
 		updateGroup(state, data) {
-			let row = state.group[state.category][state.currentId];
-			row.text = data.name;
-			row.description = data.description;
+			console.warn('from updateGroup, data =', data);
 		}
 	},
 };

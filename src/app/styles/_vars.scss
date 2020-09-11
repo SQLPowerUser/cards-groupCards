@@ -18,9 +18,10 @@ $background-card: #eee;
 	justify-content: space-between;
 }
 
-@mixin card-item {
+@mixin row-item {
+	position: relative;
 	margin: 10px 0 10px 9px;
-	padding: 7px;
+	padding: 4px;
 	border: 0 solid transparent;
 	border-radius: 2px;
 	background: #fff;
