@@ -78,7 +78,7 @@ export default {
 			const currentMode = (typeof(passData) === 'string') ? 'Добавить задание' : 'Редактировать задание';
 			const currentTaskID = passData.id ? passData.id : '';
 			this.$store.commit({
-				type: "setCurrentInfo",
+				type: 'setCurrentInfo',
 				mode: currentMode,
 				groupID: this.groupInfo[0],
 				taskID:  currentTaskID
@@ -104,7 +104,7 @@ export default {
 .card-caption {
 	display: flex;
 	margin-bottom: 6px;
-	padding: 8px 10px 6px 6px;
+	padding: 8px 10px 2px 6px;
 }
 
 .card-caption__btn-expand {

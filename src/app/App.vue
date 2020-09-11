@@ -87,6 +87,12 @@ export default {
 			this.isComplete = 'any';
 		},
 		createNewGroup() {
+			this.$store.commit({
+				type: 'setCurrentInfo',
+				mode: 'Создать новую группу',
+				groupID: '',
+				taskID: ''
+			});
 			this.$router.push('addEditGroup');
 		},
 		groupsExpandCollapse() {
@@ -157,7 +163,7 @@ export default {
 	display: flex;
 	align-items: center;
 	flex: 1 1 50%;
-	margin: 14px 20px 0 0;
+	margin: 14px 25px 0 0;
 	white-space: nowrap;
 }
 

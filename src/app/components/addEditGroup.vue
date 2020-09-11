@@ -5,7 +5,7 @@
 				class="add-edit-group__wnd-btn-close img-wnd-close"
 				@click="closeWnd"
 			></p>
-			Создать новую группу
+			{{ header }}
 		</div>
 
 		<div class="add-edit-group-content">
@@ -54,14 +54,31 @@ export default {
 	},
 	computed: {
 		...mapState([
-			'group'
+			'group',
+			'currentInfo'
 		]),
+		header() {
+			return this.currentInfo.mode;
+		},
 		haveGroupDuplicate() {
-			name = this.groupName.trim();
-			return Object.values(this.$store.state.group).some(el => {
-				return el.name.toLowerCase() === name.toLowerCase();
-			});
+			let result;
+			const currentGroupID = this.currentInfo.groupID;
+			const groupName = this.groupName.trim().toLowerCase();
+			const groups = this.group;
+			for(let groupID in groups) {
+				result = (groupName === groups[groupID].name && groupID != currentGroupID);
+				if (result) { break; }
+			}
+			return result;
 		}
+	},
+	beforeRouteEnter(to, from, next) {
+		next(that => {
+			if (!that.currentInfo.mode) {
+				window.history.back();
+				return false;
+			}
+		});
 	},
 	methods: {
 		checkRequired(fieldName) {

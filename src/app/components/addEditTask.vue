@@ -90,14 +90,18 @@ export default {
 			return this.currentInfo.mode;
 		},
 		haveTaskDuplicate() {
-			if (this.$store.state.currentInfo.mode !== 'Добавить задание') { return; }
-			name = this.taskName.trim();
-			const groupID = this.$store.state.currentInfo.groupID;
-			return Object.values(this.$store.state.task).some(el => {
-				if (groupID == el.groupID) {
-					return el.name.toLowerCase() === name.toLowerCase();
+			let result;
+			const currentGroupID = this.currentInfo.groupID;
+			const currentTaskID = this.currentInfo.taskID;
+			const taskName = this.taskName.trim().toLowerCase();
+			const tasks = this.task;
+			for(let taskID in tasks) {
+				if (tasks[taskID].groupID == currentGroupID) {
+					result = (taskName === tasks[taskID].name.toLowerCase() && taskID != currentTaskID);
+					if (result) { break; }
 				}
-			});
+			}
+			return result;
 		}
 	},
 	beforeRouteEnter(to, from, next) {

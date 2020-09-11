@@ -64,15 +64,14 @@ export default {
 			state.currentInfo = data;
 		},
 		saveTask(state, data) {
-			let taskID = state.currentInfo.taskID || ++state.maxTaskID;
+			const taskID = state.currentInfo.taskID || ++state.maxTaskID;
 			delete data.type;
 			state.task = {...state.task, ...{[taskID]: data}};
 		},
-		addNewGroup(state, data) {
-			//state.group.push(++state.maxID, name: data.name });
-		},
-		updateGroup(state, data) {
-			console.warn('from updateGroup, data =', data);
+		saveGroup(state, data) {
+			const groupID = state.currentInfo.groupID || ++state.maxGroupID;
+			delete data.type;
+			state.group = {...state.group, ...{[groupID]: data}};
 		}
 	},
 };
