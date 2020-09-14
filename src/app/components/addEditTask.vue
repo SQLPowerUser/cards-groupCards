@@ -34,6 +34,7 @@
 			<textarea
 				class="add-edit-task-field-task"
 				v-model="taskName"
+				@keyup.esc="closeWnd"
 				rows="4"
 			></textarea>
 
@@ -41,23 +42,29 @@
 			<textarea
 				class="add-edit-task-field-description"
 				v-model="description"
+				@keyup.esc="closeWnd"
 				rows="8"
 			></textarea>
 
 			<label class="add-edit-task-isComplete">
-				<input type="checkbox" v-model="isComplete">
+				<input
+					type="checkbox"
+					v-model="isComplete"
+				>
 				<span>Выполнено</span>
 			</label>
 		</div>
 		<div class="add-edit-task-footer">
 			<p class="add-edit-task__btn-save" @click="saveTask">Сохранить</p>
+			<p class="add-edit-task__btn-delete" @click="deleteTask">Удалить</p>
 			<p class="add-edit-task__btn-close" @click="closeWnd">Отменить</p>
 		</div>
 
 		<MessageBox
-			v-show="messageText"
-			:text="messageText"
-			@close-msg="messageText = ''"
+			:mbo="mbo"
+			v-show="mbo.text"
+			@close-msg="mbo = {}"
+			@yes-action="yesAction"
 		></MessageBox>
 	</div>
 </template>
@@ -67,15 +74,15 @@ import { mapState } from 'vuex';
 import MessageBox from './messageBox.vue';
 
 export default {
-	components: { MessageBox },
 	name: 'AddEditTask',
 	data() {
 		return {
-			messageText: '',
 			groupName: '',
 			taskName: '',
 			description: '',
-			isComplete: false
+			isComplete: false,
+			mbo: {}, // MessageBox Object
+			yesAction: ''
 		};
 	},
 	computed: {
@@ -131,14 +138,20 @@ export default {
 			return this[fieldName].trim() === '';
 		},
 		saveTask() {
+			this.mbo = {
+				mbtype: 'error',
+				caption: 'Ошибка',
+				no: 'Закрыть'
+			};
+
 			const taskName = this.taskName.trim();
 			if (taskName === '') {
-				this.messageText = 'Поле "Задание" не может быть пустым';
+				this.mbo.text = 'Поле "Задание" не может быть пустым';
 				return;
 			}
 
 			if (this.haveTaskDuplicate) {
-				this.messageText = 'В этой группе уже есть задача с таким названием.<br>Переименуйте задание';
+				this.mbo.text = 'В этой группе уже есть задача с таким именем.<br>Переименуйте задание';
 				return;
 			}
 
@@ -151,12 +164,25 @@ export default {
 			});
 			this.closeWnd();
 		},
+		deleteTask() {
+			console.log('MessageBox :>> ', MessageBox);
+			this.mbo = {
+				mbtype: 'question',
+				caption: 'Подтверждение',
+				text: 'Удалить эту задачу?',
+				yes: 'Удалить',
+				no: 'Не удалять'
+			};
+		},
 		closeWnd() {
 			this.$router.go(-1);
 		},
 	},
 	mounted() {
 		this.$el.querySelector('textarea').focus();
+	},
+	components: {
+		MessageBox
 	}
 };
 </script>
@@ -237,6 +263,10 @@ export default {
 
 .add-edit-task__btn-save {
 	@include btn(99px, 32px, #fff, #27ae60, #27ae60);
+}
+
+.add-edit-task__btn-delete {
+	@include btn(99px, 32px, #fff, #ee6969, #ee6969);
 }
 
 .add-edit-task__btn-close {

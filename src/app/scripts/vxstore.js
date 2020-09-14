@@ -8,8 +8,8 @@ export default {
 			5: { name: "Empty Group" },
 		},
 		task: {
-			1: { groupID: 2, name: "Защитить исследовательский Центр Парения", isComplete: false },
-			2: { groupID: 2, name: "Освободить комплекс по добыче воды", isComplete: false },
+			1: { groupID: 2, name: "Защитить исследовательский Центр Парения, освободить комплекс по добыче воды, уничтожить все военные базы Империи и Стража Свободы", isComplete: false },
+			2: { groupID: 2, name: "Накопить 3000 кредитов для отправки с орбиты ещё одного конвоя с водой", isComplete: false },
 			3: { groupID: 4, name: "t1", isComplete: false },
 			4: { groupID: 4, name: "t2", isComplete: true },
 			5: { groupID: 4, name: "t3", isComplete: false },

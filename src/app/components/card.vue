@@ -11,19 +11,28 @@
 			<div class="card-caption-menu" tabindex="-1">
 				&#9776;
 				<div class="card-caption-menu-items">
-					<p class="card-caption-menu-item" @click="showEditTask(groupInfo[0])">
+					<p
+						class="card-caption-menu-item"
+						@click="showEditTask(groupInfo[0])"
+					>
 						<svg viewBox="0 0 16 16" width="16" height="16">
 							<path d="M14 8H8V14H6V8H0V6H6V0H8V6H14V8Z" fill="#007200" />
 						</svg>
 						&#160;Добавить задание
 					</p>
-					<p class="card-caption-menu-item">
+					<p
+						class="card-caption-menu-item"
+						@click="showEditGroup"
+					>
 						<svg viewBox="1 -1 16 16" width="16" height="16">
 							<path fill="#999" d="M14 1H2c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h2v3.5L7.5 11H14c.55 0 1-.45 1-1V2c0-.55-.45-1-1-1zm0 9H7l-2 2v-2H2V2h12v8z"></path>
 						</svg>
 						&#160;Переименовать группу
 					</p>
-					<p class="card-caption-menu-item">
+					<p
+						class="card-caption-menu-item"
+						@click="deleteGroup"
+					>
 						<svg viewBox="2 0 12 16" width="16" height="16">
 							<path fill="#ec5252" d="M7.48 8l3.75 3.75-1.48 1.48L6 9.48l-3.75 3.75-1.48-1.48L4.52 8 .77 4.25l1.48-1.48L6 6.52l3.75-3.75 1.48 1.48L7.48 8z"></path>
 						</svg>
@@ -56,7 +65,6 @@ export default {
 	},
 	data() {
 		return {
-			newText: "",
 			showBlockAdd: false,
 			isExpand: true
 		};
@@ -84,6 +92,24 @@ export default {
 				taskID:  currentTaskID
 			});
 			this.$router.push('addEditTask');
+		},
+		showEditGroup() {
+			this.$store.commit({
+				type: 'setCurrentInfo',
+				mode: 'Переименовать группу',
+				groupID: this.groupInfo[0],
+				taskID: ''
+			});
+			this.$router.push('addEditGroup');
+		},
+		deleteGroup() {
+			this.$store.commit({
+				type: 'setCurrentInfo',
+				mode: 'Удалить группу',
+				groupID: this.groupInfo[0],
+				taskID: ''
+			});
+			this.messageText = 'Удалить всю группу без возможности восстановления?';
 		}
 	}
 };
@@ -127,7 +153,7 @@ export default {
 	background: #fff;
 	border: 1px solid #ccc;
 	border-radius: 3px;
-	display: none1;
+	display: none;
 	z-index: 1;
 }
 

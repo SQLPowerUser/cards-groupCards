@@ -23,33 +23,33 @@
 				type="text"
 				v-model="groupName"
 				@keyup.enter="saveGroup"
+				@keyup.esc="closeWnd"
 			>
 		</div>
 
 		<div class="add-edit-group-footer">
-			<p class="add-edit-group__btn-save" @click="saveGroup">Создать</p>
+			<p class="add-edit-group__btn-save" @click="saveGroup">Сохранить</p>
 			<p class="add-edit-group__btn-close" @click="closeWnd">Отменить</p>
 		</div>
 
 		<MessageBox
-			v-show="messageText"
-			:text="messageText"
-			@close-msg="messageText = ''"
+			:mbo="mbo"
+			v-show="mbo.text"
+			@close-msg="mbo = {}"
 		></MessageBox>
 	</div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
-import MessageBox from './messageBox.vue';
+import MessageBox from './messageBox.vue'
 
 export default {
-	components: { MessageBox },
 	name: 'AddEditGroup',
 	data() {
 		return {
 			groupName: '',
-			messageText: ''
+			mbo: {} // MessageBox Object
 		};
 	},
 	computed: {
@@ -78,6 +78,9 @@ export default {
 				window.history.back();
 				return false;
 			}
+
+			const groupID = that.currentInfo.groupID;
+			that.groupName = groupID ? that.group[groupID].name : '';
 		});
 	},
 	methods: {
@@ -85,14 +88,20 @@ export default {
 			return this[fieldName].trim() === '';
 		},
 		saveGroup() {
+			this.mbo = {
+				mbtype: 'error',
+				caption: 'Ошибка',
+				no: 'Закрыть'
+			};
+
 			const groupName = this.groupName.trim();
 			if (groupName === '') {
-				this.messageText = 'Заполните поле<br>"Название"';
+				this.mbo.text = 'Заполните поле<br>"Название"';
 				return;
 			}
 
 			if (this.haveGroupDuplicate) {
-				this.messageText = 'Группа с таким именем уже есть.<br>Переименуйте группу';
+				this.mbo.text = 'Группа с таким именем уже есть.<br>Задайте другое имя';
 				return;
 			}
 
@@ -108,6 +117,9 @@ export default {
 	},
 	mounted() {
 		this.$el.querySelector('input').focus();
+	},
+	components: {
+		MessageBox
 	}
 };
 </script>

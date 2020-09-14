@@ -1,11 +1,11 @@
-import "./styles/common.scss";
-import Vue from "vue";
-import VueX from "vuex";
-import VueRouter from "vue-router";
+import './styles/common.scss';
+import Vue from 'vue';
+import VueX from 'vuex';
+import VueRouter from 'vue-router';
 
-import VXstore from "./scripts/vxstore.js";
-import App from "./App.vue";
-require.context("../public", true, /\.(png|woff)$/i);
+import VXstore from './scripts/vxstore.js';
+import App from './App.vue';
+require.context('../public', true, /\.(png|woff)$/i);
 
 Vue.use(VueX);
 const store = new VueX.Store(VXstore);

@@ -106,10 +106,10 @@ export default {
 		Card,
 		AddEditTask,
 		AddEditGroup,
-		FogOver,
+		FogOver
 	}
 };
-/*setTimeout(() => {
+setTimeout(() => {
 	document.querySelectorAll('.card-caption-menu-item')[0].click();
 }, 500);/**/
 </script>
@@ -117,7 +117,6 @@ export default {
 
 <style>
 @import "styles/_vars.scss";
-
 
 .container {
 	max-width: 960px;
