@@ -68,6 +68,10 @@ export default {
 			delete data.type;
 			state.task = {...state.task, ...{[taskID]: data}};
 		},
+		deleteTask(state) {
+			state.task[state.currentInfo.taskID] = null;
+			delete state.task[state.currentInfo.taskID];
+		},
 		saveGroup(state, data) {
 			const groupID = state.currentInfo.groupID || ++state.maxGroupID;
 			delete data.type;

@@ -23,8 +23,8 @@
 			<div class="wnd-footer">
 				<div
 					class="wnd-button"
-					@click="closeWnd"
 					v-show="mbo.yes"
+					@click="yesClick"
 				>
 					{{ mbo.yes }}
 				</div>
@@ -45,9 +45,13 @@ export default {
 	name: "MessageBox",
 	props: ['mbo'], // MessageBox Object
 	methods: {
+		yesClick() {
+			this.$emit('yes-action');
+			this.closeWnd();
+		},
 		closeWnd() {
 			this.$emit('close-msg');
-		},
+		}
 	},
 	watch: {
 		mbo() {

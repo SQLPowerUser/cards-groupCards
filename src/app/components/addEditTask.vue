@@ -17,8 +17,7 @@
 				<span
 					class="required-field"
 					v-show="checkRequired('groupName')"
-				>
-					* Обязательно для заполнения
+				>* Обязательно для заполнения
 				</span>
 			</p>
 
@@ -27,8 +26,7 @@
 				<span
 					class="required-field"
 					v-show="checkRequired('taskName')"
-				>
-					* Обязательно для заполнения
+				>* Обязательно для заполнения
 				</span>
 			</p>
 			<textarea
@@ -55,16 +53,29 @@
 			</label>
 		</div>
 		<div class="add-edit-task-footer">
-			<p class="add-edit-task__btn-save" @click="saveTask">Сохранить</p>
-			<p class="add-edit-task__btn-delete" @click="deleteTask">Удалить</p>
-			<p class="add-edit-task__btn-close" @click="closeWnd">Отменить</p>
+			<p
+				class="add-edit-task__btn-save"
+				@click="saveTask"
+			>Сохранить
+			</p>
+			<p
+				class="add-edit-task__btn-delete"
+				v-show="currentInfo.taskID"
+				@click="confirmDelete"
+			>Удалить
+			</p>
+			<p
+				class="add-edit-task__btn-close"
+				@click="closeWnd"
+			>Отменить
+			</p>
 		</div>
 
 		<MessageBox
 			:mbo="mbo"
 			v-show="mbo.text"
 			@close-msg="mbo = {}"
-			@yes-action="yesAction"
+			@yes-action="this[yesAction]"
 		></MessageBox>
 	</div>
 </template>
@@ -82,7 +93,7 @@ export default {
 			description: '',
 			isComplete: false,
 			mbo: {}, // MessageBox Object
-			yesAction: ''
+			yesAction: 'deleteTask'
 		};
 	},
 	computed: {
@@ -164,8 +175,7 @@ export default {
 			});
 			this.closeWnd();
 		},
-		deleteTask() {
-			console.log('MessageBox :>> ', MessageBox);
+		confirmDelete() {
 			this.mbo = {
 				mbtype: 'question',
 				caption: 'Подтверждение',
@@ -173,6 +183,11 @@ export default {
 				yes: 'Удалить',
 				no: 'Не удалять'
 			};
+			this.yesAction = 'deleteTask';
+		},
+		deleteTask() {
+			this.$store.commit('deleteTask');
+			this.closeWnd();
 		},
 		closeWnd() {
 			this.$router.go(-1);
@@ -273,4 +288,9 @@ export default {
 	@include btn(99px, 32px, #fff, #0C7CD5, #0C7CD5);
 }
 
+@media screen and (max-width:329px) {
+	.add-edit-task-footer {
+		padding: 10px 2px;
+	}
+}
 </style>

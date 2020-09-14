@@ -110,7 +110,7 @@ export default {
 	}
 };
 setTimeout(() => {
-	document.querySelectorAll('.card-caption-menu-item')[0].click();
+	document.querySelectorAll('.row-item')[0].click();
 }, 500);/**/
 </script>
 
