@@ -10,7 +10,11 @@
 		<div class="add-edit-task-content">
 			<p class="add-edit-task-label">
 				Группа
-				<span class="add-edit-task__btn-change-group">Поменять группу</span>
+				<span
+					class="add-edit-task__btn-change-group"
+					@click="showChangeGroup = true"
+				>Поменять группу
+				</span>
 			</p>
 			<p class="add-edit-task-field-group">
 				{{ groupName }}
@@ -32,7 +36,7 @@
 			<textarea
 				class="add-edit-task-field-task"
 				v-model="taskName"
-				@keyup.esc="closeWnd"
+				@keydown.esc="closeWnd"
 				rows="4"
 			></textarea>
 
@@ -40,7 +44,7 @@
 			<textarea
 				class="add-edit-task-field-description"
 				v-model="description"
-				@keyup.esc="closeWnd"
+				@keydown.esc="closeWnd"
 				rows="8"
 			></textarea>
 
@@ -74,15 +78,22 @@
 		<MessageBox
 			:mbo="mbo"
 			v-show="mbo.text"
-			@close-msg="mbo = {}"
+			@close-msg="focusName"
 			@yes-action="this[yesAction]"
 		></MessageBox>
+
+		<ChangeGroup
+			v-show="showChangeGroup"
+			:isShow="showChangeGroup"
+			@close-wnd="showChangeGroup = false"
+		></ChangeGroup>
 	</div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
 import MessageBox from './messageBox.vue';
+import ChangeGroup from './changeGroup.vue'
 
 export default {
 	name: 'AddEditTask',
@@ -93,7 +104,8 @@ export default {
 			description: '',
 			isComplete: false,
 			mbo: {}, // MessageBox Object
-			yesAction: 'deleteTask'
+			yesAction: 'deleteTask',
+			showChangeGroup: false
 		};
 	},
 	computed: {
@@ -142,11 +154,16 @@ export default {
 				that.description = that.task[taskID].description || '';
 				that.isComplete  = that.task[taskID].isComplete;
 			}
+			that.focusName();
 		});
 	},
 	methods: {
 		checkRequired(fieldName) {
 			return this[fieldName].trim() === '';
+		},
+		focusName() {
+			this.mbo = {};
+			this.$el.querySelector('textarea').focus();
 		},
 		saveTask() {
 			this.mbo = {
@@ -193,11 +210,9 @@ export default {
 			this.$router.go(-1);
 		},
 	},
-	mounted() {
-		this.$el.querySelector('textarea').focus();
-	},
 	components: {
-		MessageBox
+		MessageBox,
+		ChangeGroup
 	}
 };
 </script>
@@ -214,7 +229,7 @@ export default {
 	left: 5px;
 	top: 5px;
 	right: 5px;
-	bottom: 10px;
+	bottom: 5px;
 	margin: auto;
 	background: #f5f5f5;
 	border-radius: 5px;

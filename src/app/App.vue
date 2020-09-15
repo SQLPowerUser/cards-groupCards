@@ -109,7 +109,7 @@ export default {
 		FogOver
 	}
 };
-setTimeout(() => {
+/*setTimeout(() => {
 	document.querySelectorAll('.row-item')[0].click();
 }, 500);/**/
 </script>

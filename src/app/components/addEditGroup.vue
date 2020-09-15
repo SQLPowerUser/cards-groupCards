@@ -23,7 +23,7 @@
 				type="text"
 				v-model="groupName"
 				@keyup.enter="saveGroup"
-				@keyup.esc="closeWnd"
+				@keydown.esc="closeWnd"
 			>
 		</div>
 
@@ -35,7 +35,7 @@
 		<MessageBox
 			:mbo="mbo"
 			v-show="mbo.text"
-			@close-msg="mbo = {}"
+			@close-msg="focusName"
 		></MessageBox>
 	</div>
 </template>
@@ -81,11 +81,16 @@ export default {
 
 			const groupID = that.currentInfo.groupID;
 			that.groupName = groupID ? that.group[groupID].name : '';
+			that.focusName();
 		});
 	},
 	methods: {
 		checkRequired(fieldName) {
 			return this[fieldName].trim() === '';
+		},
+		focusName() {
+			this.mbo = {};
+			this.$el.querySelector('input').focus();
 		},
 		saveGroup() {
 			this.mbo = {
@@ -114,9 +119,6 @@ export default {
 		closeWnd() {
 			this.$router.go(-1);
 		},
-	},
-	mounted() {
-		this.$el.querySelector('input').focus();
 	},
 	components: {
 		MessageBox

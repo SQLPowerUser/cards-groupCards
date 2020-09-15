@@ -58,7 +58,7 @@
 
 <script>
 export default {
-	name: "Card",
+	name: 'Card',
 	props: {
 		groupInfo: Array,
 		tasks: Array,
@@ -109,7 +109,7 @@ export default {
 				groupID: this.groupInfo[0],
 				taskID: ''
 			});
-			this.messageText = 'Удалить всю группу без возможности восстановления?';
+			alert('Удалить всю группу без возможности восстановления?');
 		}
 	}
 };
@@ -119,7 +119,7 @@ export default {
 @import "../styles/_vars.scss";
 
 .card {
-	margin-top: 15px;
+	margin-top: 10px;
 	background: $background-card;
 	border-radius: 5px;
 	align-self: flex-start;
@@ -168,7 +168,7 @@ export default {
 }
 
 .row-items-block {
-	padding: 0 10px 1px 0;
+	padding: 0 10px 1px 9px;
 }
 
 .row-item {

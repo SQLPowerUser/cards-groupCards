@@ -1,7 +1,7 @@
 <template>
 	<div
 		class="block-over"
-		@keyup.esc="closeWnd"
+		@keydown.esc="closeWnd"
 		tabindex="-1"
 	>
 		<div class="wnd wnd-message-box">
@@ -25,15 +25,13 @@
 					class="wnd-button"
 					v-show="mbo.yes"
 					@click="yesClick"
-				>
-					{{ mbo.yes }}
+				>{{ mbo.yes }}
 				</div>
 
 				<div
 					class="wnd-button"
 					@click="closeWnd"
-				>
-					{{ mbo.no }}
+				>{{ mbo.no }}
 				</div>
 			</div>
 		</div>
@@ -42,7 +40,7 @@
 
 <script>
 export default {
-	name: "MessageBox",
+	name: 'MessageBox',
 	props: ['mbo'], // MessageBox Object
 	methods: {
 		yesClick() {
@@ -54,9 +52,7 @@ export default {
 		}
 	},
 	watch: {
-		mbo() {
-			this.$el.focus();
-		}
+		mbo() { this.$el.focus(); }
 	}
 };
 </script>
