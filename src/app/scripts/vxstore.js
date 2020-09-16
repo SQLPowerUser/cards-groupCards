@@ -81,8 +81,14 @@ export default {
 			state.group = {...state.group, ...{[groupID]: data}};
 		},
 		deleteGroup(state) {
-			state.group[state.currentInfo.groupID] = null;
-			delete state.group[state.currentInfo.groupID];
+			const groupID = state.currentInfo.groupID;
+			for (let taskID in state.task) {
+				if (state.task[taskID].groupID == groupID) {
+					delete state.task[taskID];
+				}
+			}
+			state.group[groupID] = null;
+			delete state.group[groupID];
 		}
 	}
 };
