@@ -6,7 +6,8 @@
 				class="card-caption__btn-expand"
 				@click="isExpand = !isExpand"
 			></p>
-			<p> {{ groupInfo[1] }} </p>
+
+			<p class="card-caption-group-name"> {{ groupInfo[1] }} </p>
 
 			<div class="card-caption-menu" tabindex="-1">
 				&#9776;
@@ -31,7 +32,7 @@
 					</p>
 					<p
 						class="card-caption-menu-item"
-						@click="deleteGroup"
+						@click="confirmDeleteGroup"
 					>
 						<svg viewBox="2 0 12 16" width="16" height="16">
 							<path fill="#ec5252" d="M7.48 8l3.75 3.75-1.48 1.48L6 9.48l-3.75 3.75-1.48-1.48L4.52 8 .77 4.25l1.48-1.48L6 6.52l3.75-3.75 1.48 1.48L7.48 8z"></path>
@@ -68,7 +69,7 @@ export default {
 			showBlockAdd: false,
 			isExpand: true
 		};
-	}, // data
+	},
 
 	computed: {
 		expandSymbol() {
@@ -102,14 +103,14 @@ export default {
 			});
 			this.$router.push('addEditGroup');
 		},
-		deleteGroup() {
+		confirmDeleteGroup() {
 			this.$store.commit({
 				type: 'setCurrentInfo',
 				mode: 'Удалить группу',
 				groupID: this.groupInfo[0],
 				taskID: ''
 			});
-			alert('Удалить всю группу без возможности восстановления?');
+			this.$emit('clickDeleteGroup');
 		}
 	}
 };
@@ -131,6 +132,10 @@ export default {
 	display: flex;
 	margin-bottom: 6px;
 	padding: 8px 10px 2px 6px;
+}
+
+.card-caption-group-name {
+	overflow: hidden;
 }
 
 .card-caption__btn-expand {

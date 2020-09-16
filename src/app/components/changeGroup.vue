@@ -22,24 +22,28 @@
 					<input
 						type="text"
 						placeholder="Быстрый поиск по фрагменту"
-						v-model="groupName"
+						v-model="searchGroupText"
+						style="border: 1px solid #5F91E9"
 					>
 				</div>
-				<ul class="wnd-change-group-content-list">
-					<li
-						class="wnd-change-group-item"
-						v-for="gr in group"
-						:key="gr.id"
-					> {{ gr.name }}
-					</li>
-				</ul>
+				<div class="wnd-change-group-items-block">
+					<ul>
+						<li
+							class="wnd-change-group-item"
+							v-for="(gr,id) in groupList"
+							:key="id"
+							@click="selectGroup(id)"
+						> {{ gr.name }}
+						</li>
+					</ul>
+				</div>
 			</div>
 
 			<div class="wnd-footer">
 				<div
 					class="wnd-button"
 					@click="setCurrentGroup"
-				>Поменять {{ isShow }}
+				>Поменять
 				</div>
 
 				<div
@@ -59,7 +63,9 @@ export default {
 	props: ['isShow'],
 	data() {
 		return {
-			selectedGroupID: ''
+			selectedGroupID: '',
+			groupName: '',
+			searchGroupText: ''
 		}
 	},
 	computed: {
@@ -67,12 +73,21 @@ export default {
 			'group',
 			'currentInfo'
 		]),
-		groupName() {
-			const groupID = this.currentInfo.groupID;
-			return groupID ? this.group[groupID].name : '';
+		groupList() {
+			const result = {};
+			for(let id in this.group) {
+				if (this.group[id].name.toLowerCase().includes(this.searchGroupText.toLowerCase())) {
+					result[id] = this.group[id];
+				}
+			}
+			return result;
 		}
 	},
 	methods: {
+		selectGroup(id) {
+			this.selectedGroupID = id;
+			this.groupName = this.group[id].name;
+		},
 		setCurrentGroup() {
 			this.$store.commit({
 				type: 'setCurrentGroup',
@@ -83,6 +98,13 @@ export default {
 		closeWnd() {
 			this.$emit('close-wnd');
 		}
+	},
+	watch: {
+		isShow() { this.$el.querySelector('input').focus(); }
+	},
+	mounted() {
+		const groupID = this.currentInfo.groupID;
+		this.groupName = groupID ? this.group[groupID].name : '';
 	}
 };
 </script>
@@ -90,7 +112,7 @@ export default {
 <style>
 .wnd-change-group {
 	max-width: 540px;
-	max-height: 560px;
+	max-height: 559px;
 	left: 5px;
 	top: 5px;
 	right: 5px;
@@ -101,8 +123,16 @@ export default {
 }
 
 .wnd-change-group-content {
-	padding: 5px;
+	display: flex;
+	flex-direction: column;
+	padding: 5px 5px 0 5px;
 	flex: 1;
+	min-height: 99px;
+}
+
+.wnd-change-group-items-block {
+	flex: 1;
+	overflow-y: auto;
 }
 
 .wnd-change-group-current-group,
@@ -114,10 +144,6 @@ export default {
 	padding: 3px 2px;
 }
 
-.wnd-change-group-content-list {
-	margin-top: -1px;
-	overflow-y: auto;
-}
 
 .wnd-change-group-item {
 	margin: 6px 0;

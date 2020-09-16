@@ -63,6 +63,9 @@ export default {
 			delete data.type;
 			state.currentInfo = data;
 		},
+		setCurrentGroup(state, data) {
+			state.currentInfo.groupID = data.groupID;
+		},
 		saveTask(state, data) {
 			const taskID = state.currentInfo.taskID || ++state.maxTaskID;
 			delete data.type;
@@ -76,6 +79,10 @@ export default {
 			const groupID = state.currentInfo.groupID || ++state.maxGroupID;
 			delete data.type;
 			state.group = {...state.group, ...{[groupID]: data}};
+		},
+		deleteGroup(state) {
+			state.group[state.currentInfo.groupID] = null;
+			delete state.group[state.currentInfo.groupID];
 		}
-	},
+	}
 };

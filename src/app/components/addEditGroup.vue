@@ -32,17 +32,16 @@
 			<p class="add-edit-group__btn-close" @click="closeWnd">Отменить</p>
 		</div>
 
-		<MessageBox
+		<messageBox
 			:mbo="mbo"
 			v-show="mbo.text"
 			@close-msg="focusName"
-		></MessageBox>
+		></messageBox>
 	</div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
-import MessageBox from './messageBox.vue'
 
 export default {
 	name: 'AddEditGroup',
@@ -66,7 +65,7 @@ export default {
 			const groupName = this.groupName.trim().toLowerCase();
 			const groups = this.group;
 			for(let groupID in groups) {
-				result = (groupName === groups[groupID].name && groupID != currentGroupID);
+				result = (groupName === groups[groupID].name.toLowerCase() && groupID != currentGroupID);
 				if (result) { break; }
 			}
 			return result;
@@ -119,9 +118,6 @@ export default {
 		closeWnd() {
 			this.$router.go(-1);
 		},
-	},
-	components: {
-		MessageBox
 	}
 };
 </script>

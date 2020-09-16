@@ -75,31 +75,29 @@
 			</p>
 		</div>
 
-		<MessageBox
+		<messageBox
 			:mbo="mbo"
 			v-show="mbo.text"
-			@close-msg="focusName"
+			@close-msg="focusToTaskName"
 			@yes-action="this[yesAction]"
-		></MessageBox>
+		></messageBox>
 
 		<ChangeGroup
 			v-show="showChangeGroup"
 			:isShow="showChangeGroup"
-			@close-wnd="showChangeGroup = false"
+			@close-wnd="focusToTaskName"
 		></ChangeGroup>
 	</div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
-import MessageBox from './messageBox.vue';
 import ChangeGroup from './changeGroup.vue'
 
 export default {
 	name: 'AddEditTask',
 	data() {
 		return {
-			groupName: '',
 			taskName: '',
 			description: '',
 			isComplete: false,
@@ -118,6 +116,10 @@ export default {
 		]),
 		header() {
 			return this.currentInfo.mode;
+		},
+		groupName() {
+			const groupID = this.currentInfo.groupID;
+			return groupID ? this.group[groupID].name : '';
 		},
 		haveTaskDuplicate() {
 			let result;
@@ -141,9 +143,6 @@ export default {
 				return false;
 			}
 
-			const groupID = that.currentInfo.groupID;
-			that.groupName = groupID ? that.group[groupID].name : '';
-
 			const taskID = that.currentInfo.taskID;
 			if (!taskID) {
 				that.taskName = '';
@@ -154,15 +153,16 @@ export default {
 				that.description = that.task[taskID].description || '';
 				that.isComplete  = that.task[taskID].isComplete;
 			}
-			that.focusName();
+			that.focusToTaskName();
 		});
 	},
 	methods: {
 		checkRequired(fieldName) {
 			return this[fieldName].trim() === '';
 		},
-		focusName() {
+		focusToTaskName() {
 			this.mbo = {};
+			this.showChangeGroup = false;
 			this.$el.querySelector('textarea').focus();
 		},
 		saveTask() {
@@ -211,7 +211,6 @@ export default {
 		},
 	},
 	components: {
-		MessageBox,
 		ChangeGroup
 	}
 };

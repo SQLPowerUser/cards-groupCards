@@ -5,6 +5,7 @@ import VueRouter from 'vue-router';
 
 import VXstore from './scripts/vxstore.js';
 import App from './App.vue';
+
 require.context('../public', true, /\.(png|woff)$/i);
 
 Vue.use(VueX);
@@ -31,6 +32,8 @@ const routes = [
 const router = new VueRouter({
 	routes,
 });
+
+Vue.component('messageBox', () => import('./components/messageBox.vue'));
 
 new Vue({
 	render: (h) => h(App),

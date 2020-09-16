@@ -54,7 +54,15 @@
 			:key="mapKey"
 			:groupInfo="mapValues[0]"
 			:tasks="mapValues[1]"
+			@clickDeleteGroup="confirmDeleteGroup"
 		></Card>
+
+		<messageBox
+			:mbo="mbo"
+			v-show="mbo.text"
+			@close-msg="mbo = {}"
+			@yes-action="this[yesAction]"
+		></messageBox>
 
 		<router-view name="fogOver"></router-view>
 		<router-view name="addEditTask"></router-view>
@@ -73,7 +81,9 @@ export default {
 		return {
 			searchText: '',
 			isComplete: 'any',
-			allExpand: true
+			allExpand: true,
+			yesAction: 'deleteGroup',
+			mbo: {} // MessageBox Object
 		}
 	},
 	computed: {
@@ -86,6 +96,12 @@ export default {
 			this.searchText = '';
 			this.isComplete = 'any';
 		},
+		groupsExpandCollapse() {
+			this.allExpand = !this.allExpand;
+			[...document.querySelectorAll('.card-caption__btn-expand')].forEach(el => {
+				if (el.textContent === '►' && this.allExpand || el.textContent === '▼' && !this.allExpand) { el.click(); }
+			});
+		},
 		createNewGroup() {
 			this.$store.commit({
 				type: 'setCurrentInfo',
@@ -95,10 +111,19 @@ export default {
 			});
 			this.$router.push('addEditGroup');
 		},
-		groupsExpandCollapse() {
-			this.allExpand = !this.allExpand;
-			[...document.querySelectorAll('.card-caption__btn-expand')].forEach(el => {
-				if (el.textContent === '►' && this.allExpand || el.textContent === '▼' && !this.allExpand) { el.click(); }
+		confirmDeleteGroup() {
+			this.mbo = {
+				mbtype: 'question',
+				caption: 'Подтверждение',
+				text: 'Удалить полностью всю группу?',
+				yes: 'Удалить',
+				no: 'Не удалять'
+			};
+			this.yesAction='deleteGroup';
+		},
+		deleteGroup() {
+			this.$store.commit({
+				type: 'deleteGroup'
 			});
 		}
 	},
@@ -109,9 +134,6 @@ export default {
 		FogOver
 	}
 };
-/*setTimeout(() => {
-	document.querySelectorAll('.row-item')[0].click();
-}, 500);/**/
 </script>
 
 
